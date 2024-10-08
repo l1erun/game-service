@@ -18,4 +18,5 @@ public class Cost implements Serializable {
 
     private int berries; // Ягоды
 
+    // добавить ресурсы
 }

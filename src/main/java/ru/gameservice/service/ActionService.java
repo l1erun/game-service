@@ -22,7 +22,7 @@ public class ActionService {
     private RuleService ruleService;
 
     @Autowired
-    private ActionService actionService;
+    private GameService gameService;
 
     /**
      * Создает новую игровую сессию.
@@ -69,7 +69,7 @@ public class ActionService {
      */
     public GameSession performAction(UUID sessionId, UUID playerId, String actionType, Object actionData) {
         GameSession session = getGameSession(sessionId).orElseThrow(() -> new RuntimeException("Session not found"));
-//        actionService.processAction(session, playerId, actionType, actionData);
+        gameService.processAction(session, playerId, actionType, actionData);
         gameSessionRepository.save(session);
         return session;
     }
