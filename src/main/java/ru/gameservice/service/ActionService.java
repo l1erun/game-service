@@ -2,6 +2,7 @@ package ru.gameservice.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.gameservice.dto.GameSessionRequest;
 import ru.gameservice.entity.GameSession;
 import ru.gameservice.entity.Player;
 import ru.gameservice.repository.GameSessionRepository;
@@ -56,11 +57,11 @@ public class ActionService {
     /**
      * Запускает игровую сессию.
      */
-    public GameSession startGameSession(UUID sessionId) {
-        GameSession session = getGameSession(sessionId).orElseThrow(() -> new RuntimeException("Session not found"));
+    public GameSession startGameSession(UUID sessionId, GameSessionRequest gameSessionRequest) {
         // Инициализация игрового состояния
-        ruleService.initializeGame(session);
-        gameSessionRepository.save(session);
+        GameSession session = getGameSession(sessionId).orElseThrow(() -> new RuntimeException("Session not found"));
+        ruleService.initializeGame(session, gameSessionRequest);
+//        gameSessionRepository.save(session);
         return session;
     }
 

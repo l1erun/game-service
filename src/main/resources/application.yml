@@ -23,6 +23,9 @@ redis:
     host: redis
     port: 6379
 
+jwt:
+  secret: hKfYbV1L1LwzFX2Yw8hEHyTj3E4xjV5SyJ6eR3Jg+oE=
+
 #kafka:
 #  bootstrap-servers: localhost:9092
 #  consumer:

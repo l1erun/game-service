@@ -1,12 +1,17 @@
 package ru.gameservice.entity;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 
 /**
  * Ресурсы игрока.
  */
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class Resources implements Serializable{
 
     private int twigs; // Ветки

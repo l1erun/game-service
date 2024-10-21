@@ -2,10 +2,12 @@ package ru.gameservice.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.gameservice.dto.GameSessionRequest;
 import ru.gameservice.entity.GameSession;
 import ru.gameservice.entity.Player;
 import ru.gameservice.service.ActionService;
 import ru.gameservice.service.GameService;
+import ru.gameservice.service.RuleService;
 
 import java.util.UUID;
 
@@ -21,12 +23,16 @@ public class GameController {
     @Autowired
     private ActionService actionService;
 
+    @Autowired
+    private RuleService ruleService;
+
     /**
      * Создает новую игровую сессию.
      */
     @PostMapping
-    public GameSession createGameSession() {
-        return actionService.createGameSession();
+    public void createGameSession(@RequestBody UUID gameSessionId) {
+        System.out.println(gameSessionId);
+        actionService.createGameSession();
     }
 
     /**
@@ -49,8 +55,10 @@ public class GameController {
      * Запускает игровую сессию.
      */
     @PostMapping("/{sessionId}/start")
-    public GameSession startGameSession(@PathVariable UUID sessionId) {
-        return actionService.startGameSession(sessionId);
+    public GameSession startGameSession(@PathVariable UUID sessionId, @RequestBody GameSessionRequest gameSessionRequest) {
+        System.out.println(sessionId);
+        System.out.println(gameSessionRequest);
+        return actionService.startGameSession(sessionId, gameSessionRequest);
     }
 
     /**
