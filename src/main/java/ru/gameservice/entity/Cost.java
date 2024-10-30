@@ -1,13 +1,16 @@
 package ru.gameservice.entity;
 
-import lombok.Data;
+import lombok.*;
 
 import java.io.Serializable;
 
 /**
  * Стоимость карты.
  */
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
 public class Cost implements Serializable {
 
     private int twigs; // Ветки

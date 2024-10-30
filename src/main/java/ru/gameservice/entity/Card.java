@@ -1,8 +1,6 @@
 package ru.gameservice.entity;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import ru.gameservice.enums.CardType;
 
@@ -15,9 +13,10 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 @RedisHash("Card")
 public class Card implements Serializable{
-
+    @Id
     private UUID id; // Уникальный идентификатор карты
 
     private String name; // Название карты

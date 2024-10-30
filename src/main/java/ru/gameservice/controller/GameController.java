@@ -1,6 +1,8 @@
 package ru.gameservice.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.gameservice.dto.GameSessionRequest;
 import ru.gameservice.entity.GameSession;
@@ -55,10 +57,13 @@ public class GameController {
      * Запускает игровую сессию.
      */
     @PostMapping("/{sessionId}/start")
-    public GameSession startGameSession(@PathVariable UUID sessionId, @RequestBody GameSessionRequest gameSessionRequest) {
-        System.out.println(sessionId);
-        System.out.println(gameSessionRequest);
-        return actionService.startGameSession(sessionId, gameSessionRequest);
+    public GameSession startGameSession(@PathVariable UUID sessionId) {
+        GameSession session = actionService.startGameSession(sessionId);
+//        if (session == null) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+//        }
+        System.out.println("Serialized session: " + session); // Лог для отладки
+        return session;
     }
 
     /**

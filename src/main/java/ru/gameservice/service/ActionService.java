@@ -57,12 +57,13 @@ public class ActionService {
     /**
      * Запускает игровую сессию.
      */
-    public GameSession startGameSession(UUID sessionId, GameSessionRequest gameSessionRequest) {
+    public GameSession startGameSession(UUID sessionId) {
         // Инициализация игрового состояния
         GameSession session = getGameSession(sessionId).orElseThrow(() -> new RuntimeException("Session not found"));
-        ruleService.initializeGame(session, gameSessionRequest);
-//        gameSessionRepository.save(session);
-        return session;
+//        ruleService.initializeGame(session, gameSessionRequest);
+        GameSession newGameSession = gameSessionRepository.save(ruleService.initializeGame(session));
+        System.out.println(newGameSession);
+        return newGameSession;
     }
 
     /**

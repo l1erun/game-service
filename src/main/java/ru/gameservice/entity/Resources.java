@@ -1,8 +1,5 @@
 package ru.gameservice.entity;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 
@@ -11,6 +8,7 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 public class Resources implements Serializable{
 

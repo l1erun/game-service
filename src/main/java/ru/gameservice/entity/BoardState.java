@@ -1,6 +1,6 @@
 package ru.gameservice.entity;
 
-import lombok.Data;
+import lombok.*;
 import org.springframework.data.redis.core.RedisHash;
 
 import java.io.Serializable;
@@ -10,7 +10,10 @@ import java.util.List;
 /**
  * Состояние игрового поля. Живет в течение сессии.
  */
-@Data
+@Setter
+@Getter
+@NoArgsConstructor
+@ToString
 @RedisHash("BoardState")
 public class BoardState implements Serializable {
     private List<Location> locations = new ArrayList<>(); // Доступные локации на игровом поле

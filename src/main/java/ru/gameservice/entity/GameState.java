@@ -1,9 +1,6 @@
 package ru.gameservice.entity;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.redis.core.RedisHash;
 import ru.gameservice.enums.Season;
 
@@ -17,8 +14,9 @@ import java.util.UUID;
  */
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
-@RedisHash("GameState")
+//@RedisHash("GameState")
 public class GameState implements Serializable {
     private int currentTurn; // Номер текущего хода
 
