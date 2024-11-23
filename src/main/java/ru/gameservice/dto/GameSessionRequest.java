@@ -16,4 +16,8 @@ public class GameSessionRequest {
 
     @NotNull
     private Set<UUID> players; // Список игроков в сессии
+
+    private String pin;
+
+    private String statusSession;
 }

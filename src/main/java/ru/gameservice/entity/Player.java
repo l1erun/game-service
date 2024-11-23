@@ -22,14 +22,10 @@ public class Player implements Serializable {
     private UUID playerId; // Идентификатор игрока
     private String nickname; // Отображаемое имя игрока
     private String avatarUrl;
-
     private List<Card> hand = new ArrayList<>(); // Карты на руках
-
     private List<Card> city = new ArrayList<>(); // Построенные карты в городе
-
     private Resources resources; // Ресурсы игрока
-
-    private int points; // Текущее количество очков
+    private int points = 0; // Текущее количество очков
 
     // Другие необходимые поля
 }

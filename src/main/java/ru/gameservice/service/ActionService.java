@@ -3,10 +3,15 @@ package ru.gameservice.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.gameservice.dto.GameSessionRequest;
+import ru.gameservice.dto.PlayerDto;
 import ru.gameservice.entity.GameSession;
 import ru.gameservice.entity.Player;
+import ru.gameservice.entity.Resources;
 import ru.gameservice.repository.GameSessionRepository;
+import ru.gameservice.repository.PlayerRepository;
 
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,6 +29,12 @@ public class ActionService {
 
     @Autowired
     private GameService gameService;
+
+    @Autowired
+    private MessageGameService messageGameService;
+
+    @Autowired
+    private PlayerRepository playerRepository;
 
     /**
      * Создает новую игровую сессию.
@@ -47,8 +58,22 @@ public class ActionService {
     /**
      * Добавляет игрока в игровую сессию.
      */
-    public GameSession addPlayerToSession(UUID sessionId, Player player) {
-        GameSession session = getGameSession(sessionId).orElseThrow(() -> new RuntimeException("Session not found"));
+    public GameSession addPlayerToSession(String pin, PlayerDto playerDto) {
+        GameSession session = null;
+        for (GameSession gameSession:gameSessionRepository.findAll()) {
+            if (gameSession.getPin().equals(pin)){
+                session = gameSession;
+            }
+        }
+        if (session == null){
+            throw new NoSuchElementException("Сессия с PIN-кодом " + pin + " не найдена");
+        }
+        Player player = new Player();
+        player.setPlayerId(playerDto.getId());
+        player.setNickname(playerDto.getNickname());
+        Resources resources = new Resources();
+        player.setResources(resources);
+        playerRepository.save(player);
         session.getPlayers().add(player);
         gameSessionRepository.save(session);
         return session;
@@ -60,9 +85,10 @@ public class ActionService {
     public GameSession startGameSession(UUID sessionId) {
         // Инициализация игрового состояния
         GameSession session = getGameSession(sessionId).orElseThrow(() -> new RuntimeException("Session not found"));
-//        ruleService.initializeGame(session, gameSessionRequest);
         GameSession newGameSession = gameSessionRepository.save(ruleService.initializeGame(session));
-        System.out.println(newGameSession);
+        for(Player player: newGameSession.getPlayers()) {
+            messageGameService.sendMessageToPlayer(newGameSession.getSessionId(), player.getPlayerId(), "start");
+        }
         return newGameSession;
     }
 
@@ -71,7 +97,7 @@ public class ActionService {
      */
     public GameSession performAction(UUID sessionId, UUID playerId, String actionType, Object actionData) {
         GameSession session = getGameSession(sessionId).orElseThrow(() -> new RuntimeException("Session not found"));
-        gameService.processAction(session, playerId, actionType, actionData);
+        //gameService.processAction(session, playerId, actionType, actionData);
         gameSessionRepository.save(session);
         return session;
     }

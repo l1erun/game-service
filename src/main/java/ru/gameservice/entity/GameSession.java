@@ -22,10 +22,8 @@ import java.util.UUID;
 public class GameSession implements Serializable {
     @Id
     private UUID sessionId; // Уникальный идентификатор игровой сессии
-
     private List<Player> players = new ArrayList<>(); // Список игроков в сессии
     private String pin;
     private GameState gameState; // Текущее состояние игры
-
     private long createdAt; // Время создания сессии в миллисекундах
 }

@@ -12,13 +12,13 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class Resources implements Serializable{
 
-    private int twigs; // Ветки
+    private int twigs = 0; // Ветки
 
-    private int resin; // Смола
+    private int resin = 0; // Смола
 
-    private int pebbles; // Камни
+    private int pebbles = 0; // Камни
 
-    private int berries; // Ягоды
+    private int berries = 0; // Ягоды
 
     // Другие необходимые поля
 }

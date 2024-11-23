@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.gameservice.dto.GameSessionRequest;
+import ru.gameservice.dto.PlayerDto;
 import ru.gameservice.entity.GameSession;
 import ru.gameservice.entity.Player;
 import ru.gameservice.service.ActionService;
@@ -19,21 +20,15 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/games")
 public class GameController {
-    @Autowired
-    private GameService gameService;
 
     @Autowired
     private ActionService actionService;
-
-    @Autowired
-    private RuleService ruleService;
 
     /**
      * Создает новую игровую сессию.
      */
     @PostMapping
     public void createGameSession(@RequestBody UUID gameSessionId) {
-        System.out.println(gameSessionId);
         actionService.createGameSession();
     }
 
@@ -48,9 +43,9 @@ public class GameController {
     /**
      * Присоединяет игрока к игровой сессии.
      */
-    @PostMapping("/{sessionId}/join")
-    public GameSession joinGameSession(@PathVariable UUID sessionId, @RequestBody Player player) {
-        return actionService.addPlayerToSession(sessionId, player);
+    @PostMapping("/{pin}/join")
+    public GameSession joinGameSession(@PathVariable String pin, @RequestBody PlayerDto playerDto) {
+        return actionService.addPlayerToSession(pin, playerDto);
     }
 
     /**
@@ -59,9 +54,6 @@ public class GameController {
     @PostMapping("/{sessionId}/start")
     public GameSession startGameSession(@PathVariable UUID sessionId) {
         GameSession session = actionService.startGameSession(sessionId);
-//        if (session == null) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-//        }
         System.out.println("Serialized session: " + session); // Лог для отладки
         return session;
     }

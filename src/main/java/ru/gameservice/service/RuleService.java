@@ -19,8 +19,10 @@ import java.util.*;
 public class RuleService {
     @Autowired
     private AuthService authService;
+
     @Autowired
     private WebClient webClient;
+
     @Autowired
     private PlayerRepository playerRepository;
 
