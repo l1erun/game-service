@@ -49,4 +49,14 @@ public class GameSessionController {
         GameState updatedState = gameService.getUpdatedGameState(gameUUID);
         messageGameService.sendMessageToGame(gameUUID, updatedState);
     }
+
+    @MessageMapping("/{gameId}/action2")
+    public void handlePlayerActionTest(@DestinationVariable String gameId, PlayerAction action, SimpMessageHeaderAccessor headerAccessor) {
+        // Получаем sessionId
+        System.out.println(gameId);
+        System.out.println(action);
+        GameState updatedState = gameService.getUpdatedGameState(UUID.fromString(gameId));
+        System.out.println(updatedState);
+        messageGameService.sendMessageToGame(UUID.fromString(gameId), updatedState);
+    }
 }
