@@ -17,11 +17,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @RedisHash("Location")
 public class Location implements Serializable {
-
     private String name; // Название локации
-
     private String description; // Описание локации
-
     private List<UUID> occupiedBy = new ArrayList<>(); // Список идентификаторов игроков, занявших локацию
 
     // Другие необходимые поля

@@ -12,13 +12,9 @@ import java.io.Serializable;
 @NoArgsConstructor
 @ToString
 public class Cost implements Serializable {
-
     private int twigs; // Ветки
-
     private int resin; // Смола
-
     private int pebbles; // Камни
-
     private int berries; // Ягоды
 
     // добавить ресурсы

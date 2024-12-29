@@ -10,5 +10,6 @@ public enum Season {
     WINTER,
     SPRING,
     SUMMER,
-    AUTUMN
+    AUTUMN,
+    FINISH
 }

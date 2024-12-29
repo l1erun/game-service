@@ -3,6 +3,8 @@ package ru.gameservice.entity;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
+import ru.gameservice.entity.cards.Card;
+import ru.gameservice.enums.Season;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -22,10 +24,13 @@ public class Player implements Serializable {
     private UUID playerId; // Идентификатор игрока
     private String nickname; // Отображаемое имя игрока
     private String avatarUrl;
+    private Boolean flagActivePlayer = false;
     private List<Card> hand = new ArrayList<>(); // Карты на руках
     private List<Card> city = new ArrayList<>(); // Построенные карты в городе
     private Resources resources; // Ресурсы игрока
     private int points = 0; // Текущее количество очков
+    private int workers = 2;
+    private Season currentSeason; // Текущий сезон игры
 
     // Другие необходимые поля
 }

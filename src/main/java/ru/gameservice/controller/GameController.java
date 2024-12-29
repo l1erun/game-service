@@ -54,26 +54,26 @@ public class GameController {
     @PostMapping("/{sessionId}/start")
     public GameSession startGameSession(@PathVariable UUID sessionId) {
         GameSession session = actionService.startGameSession(sessionId);
-        System.out.println("Serialized session: " + session); // Лог для отладки
+//        System.out.println("Serialized session: " + session); // Лог для отладки
         return session;
     }
 
     /**
      * Выполняет действие игрока.
      */
-    @PostMapping("/{sessionId}/action")
-    public GameSession performAction(@PathVariable UUID sessionId,
-                                     @RequestParam UUID playerId,
-                                     @RequestParam String actionType,
-                                     @RequestBody Object actionData) {
-        return actionService.performAction(sessionId, playerId, actionType, actionData);
-    }
+//    @PostMapping("/{sessionId}/action")
+//    public GameSession performAction(@PathVariable UUID sessionId,
+//                                     @RequestParam UUID playerId,
+//                                     @RequestParam String actionType,
+//                                     @RequestBody Object actionData) {
+//        return actionService.performAction(sessionId, playerId, actionType, actionData);
+//    }
 
     /**
      * Завершает ход игрока.
      */
-    @PostMapping("/{sessionId}/endTurn")
-    public GameSession endTurn(@PathVariable UUID sessionId, @RequestParam UUID playerId) {
-        return actionService.endTurn(sessionId, playerId);
-    }
+//    @PostMapping("/{sessionId}/endTurn")
+//    public GameSession endTurn(@PathVariable UUID sessionId, @RequestParam UUID playerId) {
+//        return actionService.endTurn(sessionId, playerId);
+//    }
 }

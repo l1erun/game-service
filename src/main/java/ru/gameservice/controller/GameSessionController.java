@@ -21,6 +21,8 @@ public class GameSessionController {
 
     @Autowired
     private ActionService actionService;
+
+    @Autowired
     private final MessageGameService messageGameService;
 
     public GameSessionController(GameService gameService, MessageGameService messageGameService) {
@@ -29,34 +31,35 @@ public class GameSessionController {
     }
 
     @MessageMapping("/{gameId}/action")
-    public void handlePlayerAction(@DestinationVariable String gameId, PlayerAction action, SimpMessageHeaderAccessor headerAccessor) {
-        // Получаем sessionId
+    public void handlePlayerAction(@DestinationVariable UUID gameId, PlayerAction action, SimpMessageHeaderAccessor headerAccessor) {
         String sessionId = headerAccessor.getSessionId();
-        UUID gameUUID = UUID.fromString(gameId);
         UUID playerId = action.getPlayerId();
-
-        // Если playerId != null, это игрок
         if (playerId != null) {
-            SessionRegistry.addPlayerSession(gameUUID, playerId, sessionId);
+            SessionRegistry.addPlayerSession(gameId, playerId, sessionId);
             System.out.println("Сохранено соответствие playerId " + playerId + " и sessionId " + sessionId + " для игры " + gameId);
         } else {
-            SessionRegistry.addGameBoardSession(gameUUID, sessionId);
+            SessionRegistry.addGameBoardSession(gameId, sessionId);
             System.out.println("Сохранена сессия игрового поля для игры " + gameId);
         }
-
-        gameService.processAction(gameUUID, playerId, action.getActionType(), action.getActionData());
-
-        GameState updatedState = gameService.getUpdatedGameState(gameUUID);
-        messageGameService.sendMessageToGame(gameUUID, updatedState);
     }
 
-    @MessageMapping("/{gameId}/action2")
-    public void handlePlayerActionTest(@DestinationVariable String gameId, PlayerAction action, SimpMessageHeaderAccessor headerAccessor) {
-        // Получаем sessionId
-        System.out.println(gameId);
-        System.out.println(action);
-        GameState updatedState = gameService.getUpdatedGameState(UUID.fromString(gameId));
-        System.out.println(updatedState);
-        messageGameService.sendMessageToGame(UUID.fromString(gameId), updatedState);
+    @MessageMapping("/{gameId}/getGameState")
+    public void handleGameState(@DestinationVariable UUID gameId) {
+        actionService.getGameState(gameId);
+    }
+
+    @MessageMapping("/{gameId}/{playerId}/getDataPlayer")
+    public void handlePlayerAction(@DestinationVariable UUID gameId, @DestinationVariable UUID playerId) {
+        actionService.getPlayer(gameId, playerId);
+    }
+
+    @MessageMapping("/{gameId}/{playerId}/goToSeason")
+    public void handleGoToSeason(@DestinationVariable UUID gameId, @DestinationVariable UUID playerId) {
+        gameService.processGoToSeasonAction(gameId, playerId);
+    }
+
+    @MessageMapping("/{gameId}/{playerId}/{cardId}/cardAction")
+    public void handleAction(@DestinationVariable UUID gameId, @DestinationVariable UUID playerId, @DestinationVariable UUID cardId) {
+        gameService.processAction(gameId, playerId, cardId);
     }
 }

@@ -24,7 +24,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/ws/**", "/gameSession").permitAll()
+                        .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/ws/**", "/gameSession", "/debug/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/games/{sessionId}/start").permitAll() // Разрешаем доступ к /{sessionId}/join
                         .anyRequest().authenticated()
                 )

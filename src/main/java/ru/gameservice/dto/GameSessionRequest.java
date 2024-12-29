@@ -13,11 +13,8 @@ import java.util.UUID;
 public class GameSessionRequest {
     @NotNull
     private UUID id;
-
     @NotNull
     private Set<UUID> players; // Список игроков в сессии
-
     private String pin;
-
     private String statusSession;
 }

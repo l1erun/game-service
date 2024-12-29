@@ -1,8 +1,7 @@
 package ru.gameservice.entity;
 
 import lombok.*;
-import org.springframework.data.redis.core.RedisHash;
-import ru.gameservice.enums.Season;
+import ru.gameservice.entity.cards.Card;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -19,16 +18,12 @@ import java.util.UUID;
 //@RedisHash("GameState")
 public class GameState implements Serializable {
     private int currentTurn; // Номер текущего хода
-
     private UUID activePlayerId; // Идентификатор текущего игрока
-
-    private BoardState boardState; // Состояние игрового поля
-
+    private List<Event> events = new ArrayList<>();
+    private List<Location> locations = new ArrayList<>();
+    private List<Card> meadowCard = new ArrayList<>();
     private List<Card> deck = new ArrayList<>(); // Оставшиеся в колоде карты
-
     private List<Card> discardPile = new ArrayList<>(); // Карты в сбросе
-
-    private Season currentSeason; // Текущий сезон игры
 
     // Другие необходимые поля
 }

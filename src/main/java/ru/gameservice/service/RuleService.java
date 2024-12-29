@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import ru.gameservice.dto.GameSessionRequest;
 import ru.gameservice.dto.PlayerDto;
 import ru.gameservice.entity.*;
+import ru.gameservice.entity.cards.Card;
 import ru.gameservice.enums.Season;
 import ru.gameservice.repository.PlayerRepository;
 
@@ -19,10 +19,8 @@ import java.util.*;
 public class RuleService {
     @Autowired
     private AuthService authService;
-
     @Autowired
     private WebClient webClient;
-
     @Autowired
     private PlayerRepository playerRepository;
 
@@ -34,16 +32,16 @@ public class RuleService {
         Collections.shuffle(cardList);
         GameState gameState = new GameState();
         gameState.setCurrentTurn(0);
+        gameState.setEvents(getAllEvents());
+        gameState.setLocations(getAllBaseLocation());
+        gameState.setMeadowCard(drawCards(cardList, 8));
+        for (Player player : session.getPlayers()) {
+            player.setHand(drawCards(cardList, 5));
+            player.setCurrentSeason(Season.WINTER);
+        }
         gameState.setDeck(cardList);
-        BoardState boardState = new BoardState();
-        gameState.setBoardState(boardState);
-        gameState.setCurrentSeason(Season.SUMMER);
-//        for (UUID userId : gameSessionRequest.getPlayers()) {
-//            session.getPlayers().add(getPlayerInId(userId));
-//        }
         session.setGameState(gameState);
         session.setCreatedAt(System.currentTimeMillis());
-        session.setGameState(new GameState());
         return session;
     }
 
@@ -100,6 +98,39 @@ public class RuleService {
                 .bodyToMono(new ParameterizedTypeReference<List<Card>>() {})
                 .block();
         return cards;
+    }
+
+    public List<Event> getAllEvents(){
+        String jwtToken = authService.authenticate();
+        return webClient.get()
+                .uri("http://localhost:8080/cards/events") // Endpoint аутентификации
+                .header("Authorization", jwtToken)
+                .header("Accept", "application/json") // Указываем, что ожидаем JSON
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<List<Event>>() {})
+                .block();
+    }
+
+    public List<Location> getAllBaseLocation(){
+        String jwtToken = authService.authenticate();
+        return webClient.get()
+                .uri("http://localhost:8080/cards/baseLocations") // Endpoint аутентификации
+                .header("Authorization", jwtToken)
+                .header("Accept", "application/json") // Указываем, что ожидаем JSON
+//                .bodyValue() // Передаем учетные данные в теле запроса
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<List<Location>>() {})
+                .block();
+    }
+
+    // Метод для получения 5-10 карт и удаления их из исходного списка
+    public static List<Card> drawCards(List<Card> cardList, int count) {
+        if (count > cardList.size()) {
+            throw new IllegalArgumentException("Недостаточно карт в списке для выбора " + count + " карт.");
+        }
+        List<Card> selectedCards = new ArrayList<>(cardList.subList(0, count)); // Получаем первые count карт
+        cardList.subList(0, count).clear(); // Удаляем эти карты из исходного списка
+        return selectedCards;
     }
 
     // Другие методы, связанные с правилами игры
