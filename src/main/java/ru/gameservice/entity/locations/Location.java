@@ -1,7 +1,6 @@
-package ru.gameservice.entity;
+package ru.gameservice.entity.locations;
 
 import lombok.*;
-import org.springframework.data.redis.core.RedisHash;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,11 +14,18 @@ import java.util.UUID;
 @Setter
 @ToString
 @NoArgsConstructor
-@RedisHash("Location")
+//@RedisHash("Location")
 public class Location implements Serializable {
-    private String name; // Название локации
-    private String description; // Описание локации
     private List<UUID> occupiedBy = new ArrayList<>(); // Список идентификаторов игроков, занявших локацию
-
+    private UUID id;
+    private String name;
+    private String type;
+    private String extension; // Название дополнения
+    private RewardsLocation rewards; // Награды за использование локации
+    private CostLocation cost;
+    private String description;
+    private String imageUrl;
+    private boolean uniq;
+    private int workerSlots;
     // Другие необходимые поля
 }

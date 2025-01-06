@@ -1,65 +1,59 @@
 package ru.gameservice.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.*;
 import org.springframework.stereotype.Controller;
-import ru.gameservice.entity.GameState;
-import ru.gameservice.entity.PlayerAction;
-import ru.gameservice.service.ActionService;
-import ru.gameservice.service.GameService;
-import ru.gameservice.service.MessageGameService;
-import ru.gameservice.websocket.SessionRegistry;
+import ru.gameservice.dto.PlayerActionDto;
+import ru.gameservice.service.GameManagerService;
+import ru.gameservice.service.WebClientService;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Controller
 public class GameSessionController {
+    private final WebClientService webClientService;
+    private final GameManagerService gameManagerService;
 
-    private final GameService gameService;
-
-    @Autowired
-    private ActionService actionService;
-
-    @Autowired
-    private final MessageGameService messageGameService;
-
-    public GameSessionController(GameService gameService, MessageGameService messageGameService) {
-        this.gameService = gameService;
-        this.messageGameService = messageGameService;
+    public GameSessionController(WebClientService webClientService, GameManagerService gameManagerService) {
+        this.webClientService = webClientService;
+        this.gameManagerService = gameManagerService;
     }
 
-    @MessageMapping("/{gameId}/action")
-    public void handlePlayerAction(@DestinationVariable UUID gameId, PlayerAction action, SimpMessageHeaderAccessor headerAccessor) {
-        String sessionId = headerAccessor.getSessionId();
-        UUID playerId = action.getPlayerId();
-        if (playerId != null) {
-            SessionRegistry.addPlayerSession(gameId, playerId, sessionId);
-            System.out.println("Сохранено соответствие playerId " + playerId + " и sessionId " + sessionId + " для игры " + gameId);
-        } else {
-            SessionRegistry.addGameBoardSession(gameId, sessionId);
-            System.out.println("Сохранена сессия игрового поля для игры " + gameId);
-        }
+    @MessageMapping("/{gameId}/connection")
+    public void handlePlayerAction(@DestinationVariable UUID gameId, PlayerActionDto action, SimpMessageHeaderAccessor headerAccessor) {
+        String sessionId = Objects.requireNonNull(headerAccessor.getSessionId());
+        webClientService.saveRegistryConnectionWebSocket(gameId, sessionId, action);
     }
 
     @MessageMapping("/{gameId}/getGameState")
     public void handleGameState(@DestinationVariable UUID gameId) {
-        actionService.getGameState(gameId);
+        gameManagerService.sendGameStateInGameBoard(gameId);
     }
 
     @MessageMapping("/{gameId}/{playerId}/getDataPlayer")
     public void handlePlayerAction(@DestinationVariable UUID gameId, @DestinationVariable UUID playerId) {
-        actionService.getPlayer(gameId, playerId);
+        gameManagerService.sendDataPlayerInPlayer(gameId, playerId);
     }
 
     @MessageMapping("/{gameId}/{playerId}/goToSeason")
     public void handleGoToSeason(@DestinationVariable UUID gameId, @DestinationVariable UUID playerId) {
-        gameService.processGoToSeasonAction(gameId, playerId);
+        gameManagerService.movePlayerToNextSeason(gameId, playerId);
     }
 
-    @MessageMapping("/{gameId}/{playerId}/{cardId}/cardAction")
-    public void handleAction(@DestinationVariable UUID gameId, @DestinationVariable UUID playerId, @DestinationVariable UUID cardId) {
-        gameService.processAction(gameId, playerId, cardId);
+    @MessageMapping("/{gameId}/{playerId}/{cardId}/buildCardFree")
+    public void handleFreeBuildCard(@DestinationVariable UUID gameId, @DestinationVariable UUID playerId, @DestinationVariable UUID cardId) {
+        gameManagerService.freeBuildCard(gameId, playerId, cardId);
+    }
+
+    @MessageMapping("/{gameId}/{playerId}/{cardId}/buildCardWithResources")
+    public void handleBuildResourcesBuildCard(@DestinationVariable UUID gameId, @DestinationVariable UUID playerId, @DestinationVariable UUID cardId) {
+        gameManagerService.resourcesBuildCard(gameId, playerId, cardId);
+    }
+
+    @MessageMapping("/{gameId}/{playerId}/{locationId}/sendWorkerToLocation")
+    public void handleSetWorkerToLocation(@DestinationVariable UUID gameId, @DestinationVariable UUID playerId, @DestinationVariable UUID locationId) {
+        gameManagerService.setWorkerToLocation(gameId, playerId, locationId);
     }
 }

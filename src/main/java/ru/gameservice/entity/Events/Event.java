@@ -1,4 +1,4 @@
-package ru.gameservice.entity;
+package ru.gameservice.entity.Events;
 
 import lombok.*;
 import org.springframework.data.redis.core.RedisHash;

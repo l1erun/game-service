@@ -15,15 +15,6 @@ import java.util.UUID;
 @Component
 public class WebSocketEventListener {
 
-//    @EventListener
-//    public void handleSessionDisconnected(SessionDisconnectEvent event) {
-//        String sessionId = event.getSessionId();
-//
-//        // Удаляем сессии из реестра
-//        SessionRegistry.removeSessionBySessionId(sessionId);
-//        System.out.println("Session ID " + sessionId + " отключен");
-//    }
-
     @Autowired
     private SimpUserRegistry simpUserRegistry;
 
@@ -41,9 +32,9 @@ public class WebSocketEventListener {
 
     private void logActiveSessions() {
         for (SimpUser user : simpUserRegistry.getUsers()) {
-            System.out.println("Пользователь: " + user.getName());
+            System.out.println("Пользователь: " + user);
             for (SimpSession session : user.getSessions()) {
-                System.out.println("Сессия: " + session.getId());
+                System.out.println("Сессия: " + session);
             }
         }
     }

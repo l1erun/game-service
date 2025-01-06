@@ -2,7 +2,6 @@ package ru.gameservice.entity;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.redis.core.RedisHash;
 import ru.gameservice.entity.cards.Card;
 import ru.gameservice.enums.Season;
 
@@ -18,7 +17,6 @@ import java.util.UUID;
 @Setter
 @ToString
 @NoArgsConstructor
-@RedisHash("Player")
 public class Player implements Serializable {
     @Id
     private UUID playerId; // Идентификатор игрока

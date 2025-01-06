@@ -1,4 +1,4 @@
-package ru.gameservice.entity;
+package ru.gameservice.entity.cards;
 
 import lombok.*;
 

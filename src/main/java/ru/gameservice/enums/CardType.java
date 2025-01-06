@@ -10,5 +10,7 @@ public enum CardType {
     CREATURE, // Существо
     CONSTRUCTION, // Строение
     EVENT, // Событие
-    SPECIAL_EVENT // Особое событие
+    SPECIAL_EVENT, // Особое событие
+    FOREST,
+    LOCATION
 }
