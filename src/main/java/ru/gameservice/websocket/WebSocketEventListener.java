@@ -2,7 +2,6 @@ package ru.gameservice.websocket;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
-import org.springframework.messaging.simp.stomp.*;
 import org.springframework.messaging.simp.user.SimpSession;
 import org.springframework.messaging.simp.user.SimpUser;
 import org.springframework.messaging.simp.user.SimpUserRegistry;

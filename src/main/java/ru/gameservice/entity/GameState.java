@@ -3,7 +3,6 @@ package ru.gameservice.entity;
 import lombok.*;
 import ru.gameservice.entity.Events.Event;
 import ru.gameservice.entity.cards.Card;
-import ru.gameservice.entity.locations.Forest;
 import ru.gameservice.entity.locations.Location;
 
 import java.io.Serializable;

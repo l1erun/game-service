@@ -97,4 +97,5 @@ public class GameSessionService {
                 .orElseThrow(() -> new NoSuchElementException("Пользователь с id: " + playerId + " не найден в" +
                         " игровой сессии: " + gameSession));
     }
+
 }

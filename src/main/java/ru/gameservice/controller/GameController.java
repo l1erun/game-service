@@ -7,7 +7,6 @@ import ru.gameservice.dto.LocationDto;
 import ru.gameservice.dto.PlayerDto;
 import ru.gameservice.entity.GameSession;
 import ru.gameservice.entity.cards.Card;
-import ru.gameservice.entity.locations.Location;
 import ru.gameservice.service.GameManagerService;
 import ru.gameservice.service.GameSessionService;
 
@@ -65,7 +64,7 @@ public class GameController {
      */
     @GetMapping("/{sessionId}")
     public ResponseEntity<GameSession> getGameSession(@PathVariable UUID sessionId) {
-        GameSession session =  gameSessionService.getGameSession(sessionId);
+        GameSession session = gameSessionService.getGameSession(sessionId);
         return ResponseEntity.ok(session);
     }
 
@@ -82,14 +81,13 @@ public class GameController {
 
     @GetMapping("/{gameId}/{playerId}/{cardId}/getCheckFreeBuild")
     public ResponseEntity<List<Card>> checkFreeBuild(@PathVariable UUID gameId, @PathVariable UUID playerId, @PathVariable UUID cardId) {
-        List<Card> freeBuildCards =  gameManagerService.getListCardsInFreeBuild(gameId, playerId, cardId);
+        List<Card> freeBuildCards = gameManagerService.getListCardsInFreeBuild(gameId, playerId, cardId);
         return ResponseEntity.ok(freeBuildCards);
     }
 
     @GetMapping("/{gameId}/{playerId}/getWorkersSlot")
     public ResponseEntity<LocationDto> getWorkersSlot(@PathVariable UUID gameId, @PathVariable UUID playerId) {
-        LocationDto workersSlot =  gameManagerService.getWorkersSlot(gameId, playerId);
-        System.out.println(workersSlot);
+        LocationDto workersSlot = gameManagerService.getWorkersSlot(gameId, playerId);
         return ResponseEntity.ok(workersSlot);
     }
 }

@@ -7,7 +7,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import ru.gameservice.dto.PlayerActionDto;
 import ru.gameservice.entity.Events.Event;
 import ru.gameservice.entity.cards.Card;
-import ru.gameservice.entity.locations.Forest;
 import ru.gameservice.entity.locations.Location;
 import ru.gameservice.websocket.SessionRegistry;
 

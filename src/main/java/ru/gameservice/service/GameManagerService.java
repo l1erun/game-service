@@ -27,6 +27,8 @@ public class GameManagerService {
     public PlayerService playerService;
     @Autowired
     public CardService cardService;
+    @Autowired
+    public LocationService locationService;
 
     /**
      * Запускает игровую сессию.
@@ -201,71 +203,32 @@ public class GameManagerService {
 
     public LocationDto getWorkersSlot(UUID sessionId, UUID playerId) {
         GameSession gameSession = gameSessionService.getGameSession(sessionId);
-        LocationDto locationDto = new LocationDto();
-        for (Location baseLocation : gameSession.getGameState().getBaseLocations()) {
-            if (baseLocation.isUniq() && !baseLocation.getOccupiedBy().isEmpty()) {
-
-            } else if (!baseLocation.getOccupiedBy().contains(playerId) && baseLocation.getWorkerSlots() - baseLocation.getOccupiedBy().size() > 0) {
-                locationDto.getBaseLocation().add(baseLocation);
-            }
-        }
-        for (Location forestLocation : gameSession.getGameState().getForestLocations()) {
-            if (forestLocation.isUniq() && !forestLocation.getOccupiedBy().isEmpty()) {
-
-            } else if (!forestLocation.getOccupiedBy().contains(playerId) && forestLocation.getWorkerSlots() - forestLocation.getOccupiedBy().size() > 0) {
-                locationDto.getForestLocation().add(forestLocation);
-            }
-        }
-        for (Location userLocation : gameSession.getGameState().getUserLocation()) {
-            if (userLocation.isUniq() && !userLocation.getOccupiedBy().isEmpty()) {
-
-            } else if (!userLocation.getOccupiedBy().contains(playerId) && userLocation.getWorkerSlots() - userLocation.getOccupiedBy().size() > 0) {
-                locationDto.getUserLocation()
-                        .computeIfAbsent(userLocation.getId().toString(), key -> new ArrayList<>())
-                        .add(userLocation);
-            }
-        }
-        return locationDto;
+        return locationService.getWorkersSlot(gameSession, playerId);
     }
 
     public void setWorkerToLocation(UUID sessionId, UUID playerId, UUID locationId) {
         GameSession gameSession = gameSessionService.getGameSession(sessionId);
         Player player = gameSessionService.findPlayerInGameSession(gameSession, playerId);
-        if (player.getWorkers() > 0) {
-            Optional<Location> base = gameSession.getGameState().getBaseLocations().stream()
-                    .filter(location -> location.getId().equals(locationId))
-                    .findFirst();
-            if (base.isPresent()) {
-                Location location = base.get();
-                location.getOccupiedBy().add(playerId);
-                player.setWorkers(player.getWorkers() - 1);
-//                return;
-            }
 
-            Optional<Location> forest = gameSession.getGameState().getForestLocations().stream()
-                    .filter(location -> location.getId().equals(locationId))
-                    .findFirst();
-            if (forest.isPresent()) {
-                Location location = forest.get();
-                location.getOccupiedBy().add(playerId);
-                player.setWorkers(player.getWorkers() - 1);
-//                return;
-            }
-
-            Optional<Location> user = gameSession.getGameState().getUserLocation().stream()
-                    .filter(location -> location.getId().equals(locationId))
-                    .findFirst();
-            if (user.isPresent()) {
-                Location location = user.get();
-                location.getOccupiedBy().add(playerId);
-                player.setWorkers(player.getWorkers() - 1);
-//                return;
-            }
-            gameSessionService.saveGameSession(gameSession);
-            messageGameService.sendMessageToPlayer(sessionId, playerId, player);
-            messageGameService.sendMessageToGame(sessionId, gameSession);
-//            throw new NoSuchElementException("Локация с id: " + locationId + " не найдена");
+        if (player.getWorkers() <= 0) {
+            throw new IllegalArgumentException("Недостаточно рабочих у игрока " + player.getNickname());
         }
 
+        List<Location> allLocations = locationService.getAllLocations(gameSession);
+        Optional<Location> targetLocation = locationService.findLocationById(allLocations, locationId);
+
+        if (targetLocation.isPresent()) {
+            Location location = targetLocation.get();
+            locationService.allocateWorker(location, playerId);
+            player.setWorkers(player.getWorkers() - 1);
+
+            gameSessionService.saveGameSession(gameSession);
+            messageGameService.sendMessageToPlayer(sessionId, playerId, player);
+            messageGameService.sendMessageToGame(sessionId, gameSession.getGameState());
+        } else {
+            throw new NoSuchElementException("Локация с id: " + locationId + " не найдена");
+        }
     }
+
+
 }

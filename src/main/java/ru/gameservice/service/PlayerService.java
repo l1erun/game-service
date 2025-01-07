@@ -19,15 +19,6 @@ public class PlayerService {
         return player;
     }
 
-//    public Player getPlayer(UUID playerId){
-//        return playerRepository.findById(playerId)
-//                .orElseThrow(() -> new NoSuchElementException("Пользователь с id: " + playerId + " не найден"));
-//    }
-//
-//    public void savePlayer(Player player){
-//        playerRepository.save(player);
-//    }
-
     public boolean checkResources(Resources playerResources, Cost costCard) {
         if (playerResources.getBerries() >= costCard.getBerries()
                 && playerResources.getResin() >= costCard.getResin()

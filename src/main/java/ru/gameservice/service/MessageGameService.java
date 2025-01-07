@@ -2,10 +2,8 @@ package ru.gameservice.service;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-import ru.gameservice.entity.GameState;
 import ru.gameservice.websocket.SessionRegistry;
 
-import java.util.Map;
 import java.util.UUID;
 
 @Service
